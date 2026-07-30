@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Rootly
 
-## Getting Started
+A Next.js 16 storefront scaffold for Rootly, with typed mock data today and a
+clear boundary for a future Shopify Storefront API connection.
 
-First, run the development server:
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `src/app` contains route files, layouts, loading UI, and the global 404.
+- `src/components/ui` contains small reusable primitives.
+- `src/components/layout` contains the announcement bar, header, navigation,
+  and footer.
+- `src/features` contains storefront-specific sections grouped by domain.
+- `src/config` contains navigation and brand-level settings.
+- `src/mocks` is the temporary catalog used before Shopify is connected.
+- `src/types` contains shared commerce types.
+- `src/lib/shopify` isolates Storefront API queries, mutations, fragments, and
+  the request client.
+- `public` contains fonts, icons, brand assets, products, and lifestyle media.
 
-## Learn More
+## Shopify setup
 
-To learn more about Next.js, take a look at the following resources:
+Copy the blank values from `.env.example` into `.env.local` and add:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The current pages intentionally read from `src/mocks`; moving them to Shopify
+only requires replacing that data access at the route or feature boundary.
 
-## Deploy on Vercel
+## Checks
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run build
+```

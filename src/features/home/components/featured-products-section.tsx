@@ -1,0 +1,53 @@
+import { ArrowRight } from "lucide-react";
+import { ButtonLink } from "@/components/ui/button";
+import { Container } from "@/components/ui/container";
+import { ProductCard } from "@/features/products/components/product-card";
+import { featuredProducts } from "@/mocks/products";
+
+export function FeaturedProductsSection() {
+  return (
+    <section className="py-20 sm:py-24 lg:py-28">
+      <Container>
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand sm:text-sm">
+              Featured botanicals
+            </p>
+
+            <h2 className="mt-4 font-display text-5xl font-semibold leading-[0.95] text-forest sm:text-6xl">
+              Begin with nature’s essentials.
+            </h2>
+
+            <p className="mt-5 max-w-xl text-base leading-7 text-muted">
+              Explore some of ROOTLY’s foundational herbs, functional powders
+              and plant-based blends.
+            </p>
+          </div>
+
+          <ButtonLink
+            href="/shop"
+            variant="ghost"
+            className="w-fit gap-2 px-0 hover:bg-transparent hover:text-brand"
+          >
+            View all products
+
+            <ArrowRight
+              size={18}
+              strokeWidth={1.7}
+              aria-hidden="true"
+            />
+          </ButtonLink>
+        </div>
+
+        <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          {featuredProducts.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+            />
+          ))}
+        </div>
+      </Container>
+    </section>
+  );
+}
