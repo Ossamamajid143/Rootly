@@ -5,9 +5,9 @@ export interface Money {
 
 export interface ProductImage {
   url: string;
-  altText: string;
-  width?: number;
-  height?: number;
+  altText: string | null;
+  width: number | null;
+  height: number | null;
 }
 
 export interface SelectedOption {
@@ -29,14 +29,16 @@ export interface Product {
   handle: string;
   title: string;
   description: string;
+  descriptionHtml: string;
   productType: string;
   tags: string[];
-  badge?: string;
   availableForSale: boolean;
   featuredImage: ProductImage | null;
+  images: ProductImage[];
 
   priceRange: {
     minVariantPrice: Money;
+    maxVariantPrice: Money;
   };
 
   variants: ProductVariant[];

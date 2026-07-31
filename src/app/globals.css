@@ -65,9 +65,35 @@ select {
   font: inherit;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+@layer base {
+  a:not([class]) {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@keyframes rootly-category-ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.rootly-category-ticker {
+  animation: rootly-category-ticker 24s linear infinite;
+}
+
+.rootly-category-ticker:hover {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .rootly-category-ticker {
+    animation: none;
+  }
 }
 
 ::selection {

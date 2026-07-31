@@ -4,9 +4,11 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { ProductGrid } from "@/features/products/components/product-grid";
-import { featuredProducts } from "@/mocks/products";
+import { getFeaturedProducts } from "@/lib/shopify";
 
-export function FeaturedProducts() {
+export async function FeaturedProducts() {
+  const featuredProducts = await getFeaturedProducts();
+
   return (
     <Section>
       <Container>
@@ -24,7 +26,15 @@ export function FeaturedProducts() {
             Shop all
           </Link>
         </div>
-        <ProductGrid products={featuredProducts} />
+        {featuredProducts.length > 0 ? (
+          <ProductGrid products={featuredProducts} />
+        ) : (
+          <div className="border-y border-border py-10">
+            <p className="text-sm leading-6 text-muted">
+              No featured products are available right now.
+            </p>
+          </div>
+        )}
       </Container>
     </Section>
   );

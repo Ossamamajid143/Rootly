@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { WellnessGoal } from "@/mocks/wellness-goals";
+import type { WellnessGoal } from "@/config/wellness-goals";
 
 export function WellnessGoalList({ goals }: { goals: WellnessGoal[] }) {
   return (

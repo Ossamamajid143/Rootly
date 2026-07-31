@@ -1,7 +1,6 @@
 # Rootly
 
-A Next.js 16 storefront scaffold for Rootly, with typed mock data today and a
-clear boundary for a future Shopify Storefront API connection.
+A Next.js 16 storefront for Rootly, powered by the Shopify Storefront API.
 
 ## Development
 
@@ -20,7 +19,6 @@ Open [http://localhost:3000](http://localhost:3000).
   and footer.
 - `src/features` contains storefront-specific sections grouped by domain.
 - `src/config` contains navigation and brand-level settings.
-- `src/mocks` is the temporary catalog used before Shopify is connected.
 - `src/types` contains shared commerce types.
 - `src/lib/shopify` isolates Storefront API queries, mutations, fragments, and
   the request client.
@@ -32,11 +30,13 @@ Copy the blank values from `.env.example` into `.env.local` and add:
 
 ```bash
 SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
-SHOPIFY_STOREFRONT_ACCESS_TOKEN=your-token
+SHOPIFY_STOREFRONT_PRIVATE_TOKEN=your-private-token
+SHOPIFY_STOREFRONT_API_VERSION=2026-07
 ```
 
-The current pages intentionally read from `src/mocks`; moving them to Shopify
-only requires replacing that data access at the route or feature boundary.
+Product catalogue data is requested on the server and revalidated every five
+minutes. Keep the private token in `.env.local`; never expose it through a
+`NEXT_PUBLIC_` variable.
 
 ## Checks
 

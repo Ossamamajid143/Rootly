@@ -1,14 +1,20 @@
 import { ArrowRight } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/features/products/components/product-card";
-import { featuredProducts } from "@/mocks/products";
+import { getFeaturedProducts } from "@/lib/shopify";
 
-export function FeaturedProductsSection() {
+export async function FeaturedProductsSection() {
+  const featuredProducts = await getFeaturedProducts();
+
   return (
     <section className="py-20 sm:py-24 lg:py-28">
       <Container>
-        <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
+        <Reveal
+          className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+          y={20}
+        >
           <div className="max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand sm:text-sm">
               Featured botanicals
@@ -37,16 +43,23 @@ export function FeaturedProductsSection() {
               aria-hidden="true"
             />
           </ButtonLink>
-        </div>
+        </Reveal>
 
-        <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
-          {featuredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
-          ))}
-        </div>
+        {featuredProducts.length > 0 ? (
+          <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+            {featuredProducts.map((product, index) => (
+              <Reveal key={product.id} delay={index * 0.075} y={22}>
+                <ProductCard product={product} />
+              </Reveal>
+            ))}
+          </div>
+        ) : (
+          <Reveal className="mt-12 border-y border-border py-10" y={20}>
+            <p className="text-sm leading-6 text-muted">
+              No featured products are available right now.
+            </p>
+          </Reveal>
+        )}
       </Container>
     </section>
   );

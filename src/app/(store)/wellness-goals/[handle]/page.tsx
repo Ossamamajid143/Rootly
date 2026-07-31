@@ -5,11 +5,11 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { ProductGrid } from "@/features/products/components/product-grid";
-import { products } from "@/mocks/products";
+import { getProducts } from "@/lib/shopify";
 import {
   getWellnessGoal,
   wellnessGoals,
-} from "@/mocks/wellness-goals";
+} from "@/config/wellness-goals";
 
 type WellnessGoalPageProps = {
   params: Promise<{ handle: string }>;
@@ -40,6 +40,7 @@ export default async function WellnessGoalPage({
     notFound();
   }
 
+  const products = await getProducts();
   const matchingProducts = products.filter((product) =>
     product.tags.includes(goal.handle),
   );

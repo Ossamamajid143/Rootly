@@ -13,7 +13,8 @@ export const wellnessGoals: WellnessGoal[] = [
   {
     handle: "energy-focus",
     title: "Energy & focus",
-    description: "Feel clear and capable through the natural rhythm of your day.",
+    description:
+      "Feel clear and capable through the natural rhythm of your day.",
   },
   {
     handle: "rest-recovery",

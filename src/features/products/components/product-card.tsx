@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Leaf } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { formatMoney } from "@/lib/format-money";
 import type { Product } from "@/types/product";
 
@@ -15,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
     <article>
       <Link
         href={`/products/${product.handle}`}
-        className="group block"
+        className="group block transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transform-none"
       >
         <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] border border-border bg-sand">
           {product.featuredImage ? (
@@ -27,42 +27,9 @@ export function ProductCard({ product }: ProductCardProps) {
               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
-            <div
-              className="absolute inset-0 flex flex-col justify-between p-6 sm:p-8"
-              style={{
-                background:
-                  "radial-gradient(circle at 80% 15%, rgba(117, 85, 37, 0.22), transparent 35%), linear-gradient(145deg, #e7dac5, #f8f4eb)",
-              }}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">
-                  ROOTLY
-                </span>
-
-                <Leaf
-                  size={22}
-                  strokeWidth={1.5}
-                  className="text-brand"
-                  aria-hidden="true"
-                />
-              </div>
-
-              <div>
-                <p className="font-display text-4xl font-semibold leading-none text-forest sm:text-5xl">
-                  {product.title}
-                </p>
-
-                <p className="mt-4 text-sm font-semibold uppercase tracking-[0.16em] text-brand">
-                  {product.productType}
-                </p>
-              </div>
+            <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-muted">
+              Product image unavailable
             </div>
-          )}
-
-          {product.badge && (
-            <span className="absolute left-4 top-4 rounded-full bg-surface px-4 py-2 text-xs font-bold text-brand shadow-sm">
-              {product.badge}
-            </span>
           )}
 
           {!product.availableForSale && (

@@ -11,7 +11,7 @@ export default function CartPage() {
       <PageIntro
         eyebrow="Your selection"
         title="Your cart is currently empty."
-        description="The working cart will be added when we create our mock products and Shopify-ready product types."
+        description="Your selected ROOTLY products will appear here when cart functionality is added."
       />
     </main>
   );

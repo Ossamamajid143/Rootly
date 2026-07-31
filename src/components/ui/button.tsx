@@ -36,7 +36,9 @@ export function buttonStyles({
 }: ButtonStyleOptions = {}) {
   return cn(
     "inline-flex items-center justify-center rounded-full font-semibold",
-    "transition-colors duration-200",
+    "transition-[color,background-color,border-color,transform] duration-200",
+    "hover:-translate-y-0.5 hover:scale-[1.01] active:translate-y-0 active:scale-[0.985]",
+    "motion-reduce:transform-none",
     "focus-visible:outline-none focus-visible:ring-2",
     "focus-visible:ring-brand focus-visible:ring-offset-2",
     "disabled:pointer-events-none disabled:opacity-50",

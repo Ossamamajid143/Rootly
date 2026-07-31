@@ -5,22 +5,17 @@ import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
 import { Section } from "@/components/ui/section";
 import { ProductGrid } from "@/features/products/components/product-grid";
-import { collections, getCollection } from "@/mocks/collections";
-import { products } from "@/mocks/products";
+import { getCollectionByHandle } from "@/lib/shopify";
 
 type CollectionPageProps = {
   params: Promise<{ handle: string }>;
 };
 
-export function generateStaticParams() {
-  return collections.map((collection) => ({ handle: collection.handle }));
-}
-
 export async function generateMetadata({
   params,
 }: CollectionPageProps): Promise<Metadata> {
   const { handle } = await params;
-  const collection = getCollection(handle);
+  const collection = await getCollectionByHandle(handle);
 
   return collection
     ? { title: collection.title, description: collection.description }
@@ -31,15 +26,11 @@ export default async function CollectionPage({
   params,
 }: CollectionPageProps) {
   const { handle } = await params;
-  const collection = getCollection(handle);
+  const collection = await getCollectionByHandle(handle);
 
   if (!collection) {
     notFound();
   }
-
-  const collectionProducts = products.filter((product) =>
-    collection.productHandles.includes(product.handle),
-  );
 
   return (
     <>
@@ -58,7 +49,7 @@ export default async function CollectionPage({
       </div>
       <Section>
         <Container>
-          <ProductGrid products={collectionProducts} />
+          <ProductGrid products={collection.products} />
         </Container>
       </Section>
     </>

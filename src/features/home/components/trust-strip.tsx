@@ -5,6 +5,7 @@ import {
   MapPin,
   Sparkles,
 } from "lucide-react";
+import { Reveal } from "@/components/motion/reveal";
 import { Container } from "@/components/ui/container";
 
 interface TrustItem {
@@ -48,10 +49,12 @@ export function TrustStrip() {
             const Icon = item.icon;
 
             return (
-              <article
+              <Reveal
                 key={item.title}
+                delay={index * 0.06}
+                y={12}
                 className={[
-                  "flex gap-4 py-7 sm:px-6 lg:py-9",
+                  "py-7 sm:px-6 lg:py-9",
                   index === 0 ? "sm:pl-0" : "",
                   index !== trustItems.length - 1
                     ? "lg:border-r lg:border-border"
@@ -63,24 +66,26 @@ export function TrustStrip() {
                   .filter(Boolean)
                   .join(" ")}
               >
-                <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sand text-brand">
-                  <Icon
-                    size={20}
-                    strokeWidth={1.6}
-                    aria-hidden="true"
-                  />
-                </div>
+                <article className="flex h-full gap-4">
+                  <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sand text-brand">
+                    <Icon
+                      size={20}
+                      strokeWidth={1.6}
+                      aria-hidden="true"
+                    />
+                  </div>
 
-                <div>
-                  <h2 className="font-sans text-sm font-bold text-foreground">
-                    {item.title}
-                  </h2>
+                  <div>
+                    <h2 className="font-sans text-sm font-bold text-foreground">
+                      {item.title}
+                    </h2>
 
-                  <p className="mt-1 max-w-[240px] text-sm leading-6 text-muted">
-                    {item.description}
-                  </p>
-                </div>
-              </article>
+                    <p className="mt-1 max-w-[240px] text-sm leading-6 text-muted">
+                      {item.description}
+                    </p>
+                  </div>
+                </article>
+              </Reveal>
             );
           })}
         </div>
