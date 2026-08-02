@@ -5,7 +5,7 @@ import type {
 } from "react";
 import { cn } from "@/lib/utils";
 
-type ButtonVariant = "primary" | "secondary" | "ghost";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "light";
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonStyleOptions {
@@ -21,6 +21,8 @@ const variantStyles: Record<ButtonVariant, string> = {
     "border border-brand bg-transparent text-brand hover:bg-sand",
   ghost:
     "border border-transparent bg-transparent text-foreground hover:bg-sand",
+  light:
+    "border border-white bg-white text-forest hover:border-sand hover:bg-sand hover:text-forest",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {

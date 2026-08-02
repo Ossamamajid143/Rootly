@@ -12,7 +12,11 @@ import {
 } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { MobileMenu } from "@/components/layout/mobile-menu";
-import { mainNavigation } from "@/config/navigation";
+import {
+  isPrimaryNavigationItemActive,
+  primaryNavigation,
+  storefrontRoutes,
+} from "@/config/navigation";
 import { useCart } from "@/features/cart/cart-provider";
 
 interface HeaderProps {
@@ -55,11 +59,11 @@ export function Header({ cartCount = 0 }: HeaderProps) {
     >
       <Container className="grid h-[72px] grid-cols-[1fr_auto_1fr] items-center lg:h-20 lg:grid-cols-[auto_1fr_auto]">
         <div className="justify-self-start lg:hidden">
-          <MobileMenu items={mainNavigation} />
+          <MobileMenu items={primaryNavigation} />
         </div>
 
         <Link
-          href="/"
+          href={storefrontRoutes.home}
           aria-label="ROOTLY homepage"
           className="justify-self-center lg:justify-self-start"
         >
@@ -78,47 +82,63 @@ export function Header({ cartCount = 0 }: HeaderProps) {
           aria-label="Main navigation"
         >
           <ul className="flex items-center gap-8">
-            {mainNavigation.map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  aria-current={pathname === item.href ? "page" : undefined}
-                  className={`relative py-2 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:bg-brand after:transition-transform ${
-                    pathname === item.href
-                      ? "text-brand after:scale-x-100"
-                      : "text-foreground after:scale-x-0 hover:text-brand hover:after:scale-x-100"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+            {primaryNavigation.map((item) => {
+              const isActive = isPrimaryNavigationItemActive(
+                item.href,
+                pathname,
+              );
+
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    aria-current={isActive ? "page" : undefined}
+                    className={`relative py-2 text-sm font-semibold transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-left after:bg-brand after:transition-transform ${
+                      isActive
+                        ? "text-brand after:scale-x-100"
+                        : "text-foreground after:scale-x-0 hover:text-brand hover:after:scale-x-100"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
         <div className="flex items-center justify-self-end">
           <Link
-            href="/search"
+            href={storefrontRoutes.search}
             aria-label="Search"
+            aria-current={
+              pathname === storefrontRoutes.search ? "page" : undefined
+            }
             className="hidden size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:inline-flex"
           >
-            <Search size={20} strokeWidth={1.6} />
+            <Search size={20} strokeWidth={1.6} aria-hidden="true" />
           </Link>
 
           <Link
-            href="/account"
+            href={storefrontRoutes.account}
             aria-label="Account"
+            aria-current={
+              pathname === storefrontRoutes.account ? "page" : undefined
+            }
             className="hidden size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:inline-flex"
           >
-            <UserRound size={20} strokeWidth={1.6} />
+            <UserRound size={20} strokeWidth={1.6} aria-hidden="true" />
           </Link>
 
           <Link
-            href="/cart"
+            href={storefrontRoutes.cart}
             aria-label={`Shopping cart with ${visibleCartCount} items`}
+            aria-current={
+              pathname === storefrontRoutes.cart ? "page" : undefined
+            }
             className="relative inline-flex size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand"
           >
-            <ShoppingBag size={21} strokeWidth={1.6} />
+            <ShoppingBag size={21} strokeWidth={1.6} aria-hidden="true" />
 
             {visibleCartCount > 0 && (
               <span className="absolute right-0 top-0 flex size-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white tabular-nums">

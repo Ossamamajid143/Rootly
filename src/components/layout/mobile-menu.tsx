@@ -4,17 +4,23 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import type { NavigationItem } from "@/config/navigation";
+import {
+  isPrimaryNavigationItemActive,
+  storefrontRoutes,
+  type NavigationItem,
+} from "@/config/navigation";
 
 interface MobileMenuProps {
-  items: NavigationItem[];
+  items: readonly NavigationItem[];
 }
 
 export function MobileMenu({ items }: MobileMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const reduceMotion = useReducedMotion();
+  const pathname = usePathname();
 
   useEffect(() => {
     if (!isOpen) return;
@@ -81,13 +87,20 @@ export function MobileMenu({ items }: MobileMenuProps) {
               transition={{ duration: reduceMotion ? 0.01 : 0.42, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="flex items-center justify-between border-b border-border pb-5">
-                <Image
-                  src="/images/brand/rootly-logo.svg"
-                  alt="ROOTLY"
-                  width={120}
-                  height={42}
-                  className="h-auto w-28"
-                />
+                <Link
+                  href={storefrontRoutes.home}
+                  aria-label="ROOTLY homepage"
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-sm"
+                >
+                  <Image
+                    src="/images/brand/rootly-logo.svg"
+                    alt="ROOTLY"
+                    width={120}
+                    height={42}
+                    className="h-auto w-28"
+                  />
+                </Link>
 
                 <button
                   type="button"
@@ -101,28 +114,44 @@ export function MobileMenu({ items }: MobileMenuProps) {
 
               <nav className="mt-10" aria-label="Mobile navigation">
                 <ul className="space-y-2">
-                  {items.map((item, index) => (
-                    <motion.li
-                      key={item.href}
-                      initial={reduceMotion ? false : { opacity: 0, x: -18 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: reduceMotion ? 0 : 0.1 + index * 0.055 }}
-                    >
-                      <Link
-                        href={item.href}
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center justify-between border-b border-border py-4 font-display text-3xl font-semibold text-forest"
-                      >
-                        {item.label}
+                  {items.map((item, index) => {
+                    const isActive = isPrimaryNavigationItemActive(
+                      item.href,
+                      pathname,
+                    );
 
-                        <ArrowUpRight
-                          size={20}
-                          strokeWidth={1.5}
-                          aria-hidden="true"
-                        />
-                      </Link>
-                    </motion.li>
-                  ))}
+                    return (
+                      <motion.li
+                        key={item.href}
+                        initial={
+                          reduceMotion ? false : { opacity: 0, x: -18 }
+                        }
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                          delay: reduceMotion ? 0 : 0.1 + index * 0.055,
+                        }}
+                      >
+                        <Link
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          aria-current={isActive ? "page" : undefined}
+                          className={`flex items-center justify-between border-b py-4 font-display text-3xl font-semibold transition-colors ${
+                            isActive
+                              ? "border-brand text-brand"
+                              : "border-border text-forest hover:text-brand"
+                          }`}
+                        >
+                          {item.label}
+
+                          <ArrowUpRight
+                            size={20}
+                            strokeWidth={1.5}
+                            aria-hidden="true"
+                          />
+                        </Link>
+                      </motion.li>
+                    );
+                  })}
                 </ul>
               </nav>
 

@@ -6,6 +6,7 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
+import { storefrontRoutes } from "@/config/navigation";
 
 const ingredients = [
   { name: "Ashwagandha", image: "Ashwaganda.jpeg", eyebrow: "A focused single ingredient", copy: "ROOTLY’s Ashwagandha Powder keeps the format straightforward, making the ingredient easy to understand and simple to add to an established routine." },
@@ -59,7 +60,7 @@ export function IngredientCarousel() {
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">{item.eyebrow}</p>
                 <h3 className="mt-5 font-display text-5xl font-semibold text-forest sm:text-6xl">{item.name}</h3>
                 <p className="mt-6 max-w-lg text-base leading-8 text-muted">{item.copy}</p>
-                <Link href="/ingredients" className="mt-8 w-fit border-b border-brand pb-1 text-sm font-bold text-brand">Explore ingredients</Link>
+                <Link href={storefrontRoutes.ingredients} className="mt-8 w-fit border-b border-brand pb-1 text-sm font-bold text-brand">Explore ingredients</Link>
               </div>
             </motion.article>
           </AnimatePresence>

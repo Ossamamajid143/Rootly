@@ -5,6 +5,7 @@ import { CartView } from "@/features/cart/components/cart-view";
 
 export const metadata: Metadata = {
   title: "Cart",
+  description: "Review your ROOTLY bag and continue to secure Shopify checkout.",
 };
 
 export default function CartPage() {

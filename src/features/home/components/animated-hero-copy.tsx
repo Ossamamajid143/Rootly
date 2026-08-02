@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import { motion, useReducedMotion } from "motion/react";
 
 import { ButtonLink } from "@/components/ui/button";
+import { storefrontRoutes } from "@/config/navigation";
 
 const categories = [
   "Herbal powders",
@@ -100,7 +101,7 @@ export function AnimatedHeroCopy() {
       </motion.p>
 
       <motion.div
-        className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
+        className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap"
         initial={shouldReduceMotion ? reveal : { opacity: 0, y: 16 }}
         animate={reveal}
         transition={{
@@ -110,13 +111,13 @@ export function AnimatedHeroCopy() {
         }}
       >
         <ButtonLink
-          href="/shop"
-          size="lg"
-          className="group w-full gap-2 sm:w-auto"
+          href={storefrontRoutes.shop}
+          size="md"
+          className="group min-h-11 w-full gap-2 px-5 text-sm sm:w-auto"
         >
-          Shop all products
+          Shop now
           <ArrowRight
-            size={18}
+            size={16}
             strokeWidth={1.8}
             aria-hidden="true"
             className="transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transform-none"
@@ -124,10 +125,10 @@ export function AnimatedHeroCopy() {
         </ButtonLink>
 
         <ButtonLink
-          href="/wellness-goals"
+          href={storefrontRoutes.wellnessGoals}
           variant="secondary"
-          size="lg"
-          className="w-full sm:w-auto"
+          size="md"
+          className="min-h-11 px-5 text-sm max-sm:!hidden sm:w-auto"
         >
           Explore wellness goals
         </ButtonLink>

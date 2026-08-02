@@ -10,3 +10,8 @@ export const storeConfig = {
   email: "hello@rootly.com",
   announcement: "Free shipping on orders over 1500",
 } as const;
+
+export const socialLinks = {
+  instagram: "https://www.instagram.com/rootly.pk/",
+  facebook: "https://www.facebook.com/rootly.pk/",
+} as const;

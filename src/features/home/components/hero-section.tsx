@@ -5,64 +5,73 @@ import {
   HeroProductStage,
   type HeroSlide,
 } from "@/features/home/components/hero-product-stage";
-import { getFeaturedProducts } from "@/lib/shopify";
+import { productRoute, storefrontRoutes } from "@/config/navigation";
+import { getFeaturedProducts, getProducts } from "@/lib/shopify";
 
 export const localProductSlides: HeroSlide[] = [
   {
-    id: "ashwagandha-powder",
+    id: "editorial-ashwagandha",
     title: "Ashwagandha Powder",
     subtitle: "Herbal powder · 150g",
     image: {
       url: "/images/products/Ashwaganda.jpeg",
       altText: "ROOTLY Ashwagandha dehydrated superfood powder pouch",
     },
-    href: "/products/ashwagandha-powder",
+    href: storefrontRoutes.shop,
+    actionLabel: "Browse products",
   },
   {
-    id: "balance-blend",
+    id: "editorial-balance",
     title: "Balance Blend",
     subtitle: "Plant-based blend · 165g",
     image: {
       url: "/images/products/Balance.jpeg",
       altText: "ROOTLY Balance plant-based blend pouch",
     },
-    href: "/products/balance-blend",
+    href: storefrontRoutes.shop,
+    actionLabel: "Browse products",
   },
   {
-    id: "ease-blend",
+    id: "editorial-ease",
     title: "Ease Blend",
     subtitle: "Plant-based blend · 120g",
     image: {
       url: "/images/products/Ease.jpeg",
       altText: "ROOTLY Ease plant-based blend pouch",
     },
-    href: "/products/ease-blend",
+    href: storefrontRoutes.shop,
+    actionLabel: "Browse products",
   },
   {
-    id: "moringa-powder",
+    id: "editorial-moringa",
     title: "Moringa Powder",
     subtitle: "Herbal powder · 120g",
     image: {
       url: "/images/products/Moringa.jpeg",
       altText: "ROOTLY Moringa dehydrated superfood powder pouch",
     },
-    href: "/products/moringa-powder",
+    href: storefrontRoutes.shop,
+    actionLabel: "Browse products",
   },
   {
-    id: "pulse-blend",
+    id: "editorial-pulse",
     title: "Pulse Blend",
     subtitle: "Functional blend · 150g",
     image: {
       url: "/images/products/Pulse.jpeg",
       altText: "ROOTLY Pulse beetroot, pomegranate and cinnamon blend pouch",
     },
-    href: "/products/pulse-blend",
+    href: storefrontRoutes.shop,
+    actionLabel: "Browse products",
   },
 ];
 
 export async function HeroSection() {
   const featuredProducts = await getFeaturedProducts(5);
-  const shopifySlides = featuredProducts.flatMap<HeroSlide>((product) =>
+  const products = featuredProducts.length
+    ? featuredProducts
+    : (await getProducts()).slice(0, 5);
+  const shopifySlides = products.flatMap<HeroSlide>((product) =>
     product.featuredImage
       ? [
           {
@@ -73,7 +82,8 @@ export async function HeroSection() {
               url: product.featuredImage.url,
               altText: product.featuredImage.altText || product.title,
             },
-            href: `/products/${product.handle}`,
+            href: productRoute(product.handle),
+            actionLabel: "View product",
           },
         ]
       : [],

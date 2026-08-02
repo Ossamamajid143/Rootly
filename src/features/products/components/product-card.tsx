@@ -4,6 +4,7 @@ import { formatMoney } from "@/lib/format-money";
 import type { Product } from "@/types/product";
 import { ProductMediaFrame } from "@/features/products/components/product-media-frame";
 import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
+import { productRoute } from "@/config/navigation";
 
 interface ProductCardProps {
   product: Product;
@@ -16,7 +17,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="group/card flex h-full flex-col">
       <Link
-        href={`/products/${product.handle}`}
+        href={productRoute(product.handle)}
         className="group block focus-visible:outline-none"
       >
         <div className="relative transition-transform duration-300 group-hover/card:-translate-y-1 motion-reduce:transform-none">

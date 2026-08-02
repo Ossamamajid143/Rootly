@@ -29,6 +29,7 @@ export interface HeroSlide {
     altText: string;
   };
   href: string;
+  actionLabel: string;
 }
 
 interface HeroProductStageProps {
@@ -206,7 +207,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
     <section
       aria-label="Featured ROOTLY products"
       aria-roledescription="carousel"
-      className="relative mx-auto h-[410px] w-full max-w-[620px] overflow-hidden min-[360px]:h-[440px] min-[400px]:h-[460px] sm:h-[480px] md:h-[520px] lg:h-[540px] xl:h-[560px]"
+      className="relative mx-auto h-[430px] w-full max-w-[720px] overflow-hidden min-[360px]:h-[460px] min-[400px]:h-[510px] sm:h-[540px] md:h-[560px] lg:h-[590px] xl:h-[620px]"
       style={{ perspective: "1200px" }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
@@ -279,7 +280,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
             >
               <motion.div
                 data-card-position={position}
-                className={`pointer-events-auto relative aspect-[4/5] w-[78vw] max-w-[320px] overflow-hidden rounded-[1.5rem] border border-border bg-sand md:w-[320px] md:rounded-[1.75rem] lg:w-[340px] lg:max-w-[340px] xl:w-[360px] xl:max-w-[360px] ${
+                className={`pointer-events-auto relative aspect-[4/5] w-[82vw] max-w-[350px] overflow-hidden rounded-[1.5rem] border border-border bg-sand sm:w-[370px] sm:max-w-[370px] md:w-[390px] md:max-w-[390px] md:rounded-[1.75rem] lg:w-[410px] lg:max-w-[410px] xl:w-[440px] xl:max-w-[440px] ${
                   isActive
                     ? "shadow-[0_24px_60px_rgba(46,68,50,0.2)]"
                     : "shadow-[0_14px_35px_rgba(46,68,50,0.1)]"
@@ -348,7 +349,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
                   {isActive ? (
                     <Link
                       href={slide.href}
-                      aria-label={`View ${slide.title}`}
+                      aria-label={`${slide.actionLabel}: ${slide.title}`}
                       className="group relative block size-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white"
                     >
                       <Image
@@ -356,7 +357,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
                         alt={slide.image.altText}
                         fill
                         priority={currentIndex === 0}
-                        sizes="(max-width: 767px) 84vw, (max-width: 1279px) 340px, 360px"
+                        sizes="(max-width: 639px) 82vw, (max-width: 767px) 370px, (max-width: 1023px) 390px, (max-width: 1279px) 410px, 440px"
                         className="object-cover transition-transform duration-700 group-hover:scale-[1.015] motion-reduce:transform-none"
                       />
                       <motion.div
@@ -381,7 +382,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
                             {slide.subtitle}
                           </p>
                           <span className="inline-flex shrink-0 items-center gap-1 text-xs font-semibold text-white">
-                            View product
+                            {slide.actionLabel}
                             <ArrowUpRight
                               size={14}
                               strokeWidth={1.8}
@@ -397,7 +398,7 @@ export function HeroProductStage({ slides }: HeroProductStageProps) {
                         src={slide.image.url}
                         alt=""
                         fill
-                        sizes="(max-width: 767px) 70vw, 300px"
+                        sizes="(max-width: 639px) 72vw, (max-width: 1023px) 330px, 370px"
                         className="object-cover"
                       />
                       <div className="absolute inset-0 bg-forest/10" />

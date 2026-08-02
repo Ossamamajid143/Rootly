@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import Link from "next/link";
 import { wellnessGoals } from "@/config/wellness-goals";
+import { wellnessGoalRoute } from "@/config/navigation";
 import { ProductCard } from "@/features/products/components/product-card";
 import type { Product } from "@/types/product";
 
@@ -30,7 +32,7 @@ export function WellnessExplorer({ products }: { products: Product[] }) {
     </div>
     <AnimatePresence mode="wait">
       <motion.section key={goal.handle} id={`goal-panel-${goal.handle}`} role="tabpanel" aria-labelledby={`goal-tab-${goal.handle}`} initial={reduceMotion ? false : { opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} className="grid gap-10 py-10 lg:grid-cols-[0.7fr_1.3fr] lg:py-14">
-        <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Selected goal</p><h2 className="mt-4 font-display text-5xl font-semibold leading-[0.96] text-forest sm:text-6xl">{goal.title}</h2><p className="mt-6 text-base leading-8 text-muted">{goal.description}</p><p className="mt-5 text-xs leading-6 text-muted">These categories are for product discovery and general wellbeing only; they are not medical advice.</p></div>
+        <div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Selected goal</p><h2 className="mt-4 font-display text-5xl font-semibold leading-[0.96] text-forest sm:text-6xl">{goal.title}</h2><p className="mt-6 text-base leading-8 text-muted">{goal.description}</p><p className="mt-5 text-xs leading-6 text-muted">These categories are for product discovery and general wellbeing only; they are not medical advice.</p><Link href={wellnessGoalRoute(goal.handle)} className="mt-6 inline-flex min-h-11 items-center rounded-full border border-brand px-5 text-sm font-bold text-brand transition-colors hover:bg-sand">View this wellness goal</Link></div>
         <div>{matches.length > 0 ? <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">{matches.map((product) => <ProductCard key={product.id} product={product} />)}</div> : <div className="rounded-[2rem] border border-border bg-surface p-8 text-sm leading-7 text-muted">No Shopify products are tagged for this goal yet. The section stays intentionally empty rather than suggesting an unrelated product.</div>}</div>
       </motion.section>
     </AnimatePresence>

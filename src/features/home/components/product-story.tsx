@@ -5,6 +5,7 @@ import { ParallaxMedia } from "@/components/motion/parallax-media";
 import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { OrganicDivider } from "@/components/ui/organic-divider";
+import { storefrontRoutes } from "@/config/navigation";
 
 export function ProductStory() {
   return (
@@ -19,7 +20,7 @@ export function ProductStory() {
           <p className="mt-7 max-w-lg text-base leading-8 text-white/72 sm:text-lg">
             ROOTLY brings focused herbal powders and thoughtful blends into clear, repeatable routines. Pick your ritual, understand what is inside, and make it your own.
           </p>
-          <ButtonLink href="/about" variant="secondary" className="mt-8 gap-2 border-sand text-white hover:bg-white/10">
+          <ButtonLink href={storefrontRoutes.about} variant="secondary" className="mt-8 gap-2 border-sand text-white hover:bg-white/10">
             Our approach <ArrowRight size={17} aria-hidden="true" />
           </ButtonLink>
         </ScrollReveal>

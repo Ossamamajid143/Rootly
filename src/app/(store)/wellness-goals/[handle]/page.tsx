@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ArrowLeft } from "lucide-react";
 
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
@@ -10,6 +12,7 @@ import {
   getWellnessGoal,
   wellnessGoals,
 } from "@/config/wellness-goals";
+import { storefrontRoutes } from "@/config/navigation";
 
 type WellnessGoalPageProps = {
   params: Promise<{ handle: string }>;
@@ -49,6 +52,13 @@ export default async function WellnessGoalPage({
     <>
       <div className="bg-[#f3efe6] py-20 sm:py-28">
         <Container>
+          <Link
+            href={storefrontRoutes.wellnessGoals}
+            className="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-brand underline underline-offset-4"
+          >
+            <ArrowLeft size={16} aria-hidden="true" />
+            All wellness goals
+          </Link>
           <p className="mb-4 text-xs font-semibold tracking-[0.16em] text-[#87652f] uppercase">
             Wellness goal
           </p>

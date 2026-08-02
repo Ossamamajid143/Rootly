@@ -7,6 +7,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { wellnessGoals } from "@/config/wellness-goals";
+import { wellnessGoalRoute } from "@/config/navigation";
 
 const images = ["Pulse.jpeg", "Ease.jpeg", "Balance.jpeg", "Moringa.jpeg", "Ashwaganda.jpeg", "Balance.jpeg"];
 
@@ -49,13 +50,12 @@ export function WellnessShowcase() {
 
           <div className="no-scrollbar flex snap-x gap-4 overflow-x-auto pb-2 lg:block lg:overflow-visible">
             {wellnessGoals.map((item, index) => (
-              <button
-                type="button"
+              <Link
+                href={wellnessGoalRoute(item.handle)}
                 key={item.handle}
                 onMouseEnter={() => setActive(index)}
                 onFocus={() => setActive(index)}
-                onClick={() => setActive(index)}
-                aria-pressed={active === index}
+                aria-label={`Explore ${item.title}`}
                 className={`group min-w-[82vw] snap-center rounded-[1.5rem] border p-5 text-left transition-[background-color,border-color,transform] duration-300 sm:min-w-[55vw] lg:flex lg:min-w-0 lg:items-center lg:gap-6 lg:rounded-none lg:border-x-0 lg:border-t-0 lg:px-0 lg:py-5 ${active === index ? "border-forest bg-forest text-white lg:bg-transparent lg:text-forest" : "border-border bg-background text-foreground lg:bg-transparent"}`}
               >
                 <span className={`text-xs font-bold tabular-nums ${active === index ? "text-sand lg:text-brand" : "text-brand"}`}>{String(index + 1).padStart(2, "0")}</span>
@@ -64,9 +64,9 @@ export function WellnessShowcase() {
                   <span className={`mt-3 block text-sm leading-6 lg:hidden ${active === index ? "text-white/72" : "text-muted"}`}>{item.description}</span>
                 </span>
                 <ArrowUpRight className="mt-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1 lg:mt-0" size={20} aria-hidden="true" />
-              </button>
+              </Link>
             ))}
-            <Link href={`/wellness-goals/${goal.handle}`} className="hidden min-h-12 items-center justify-center rounded-full bg-brand px-7 text-sm font-semibold text-white transition hover:bg-brand-dark lg:mt-7 lg:inline-flex">Explore selected goal</Link>
+            <Link href={wellnessGoalRoute(goal.handle)} className="hidden min-h-12 items-center justify-center rounded-full bg-brand px-7 text-sm font-semibold text-white transition hover:bg-brand-dark lg:mt-7 lg:inline-flex">Explore selected goal</Link>
           </div>
         </div>
       </Container>

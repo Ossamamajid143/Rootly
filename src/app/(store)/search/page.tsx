@@ -6,6 +6,7 @@ import { getProducts } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Search",
+  description: "Search ROOTLY products, ingredients and wellness rituals.",
 };
 
 export default async function SearchPage() {

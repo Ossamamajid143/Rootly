@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { Container } from "@/components/ui/container";
 import { Heading } from "@/components/ui/heading";
+import { storefrontRoutes } from "@/config/navigation";
 
 export default function NotFound() {
   return (
@@ -13,12 +14,20 @@ export default function NotFound() {
       <p className="mt-5 text-[#253426]/60">
         The page may have moved, or it may no longer be available.
       </p>
-      <Link
-        className="mt-8 inline-flex min-h-11 items-center rounded-full bg-[#253426] px-6 text-sm font-semibold text-white"
-        href="/"
-      >
-        Return home
-      </Link>
+      <div className="mt-8 flex flex-wrap gap-3">
+        <Link
+          className="inline-flex min-h-11 items-center rounded-full bg-[#253426] px-6 text-sm font-semibold text-white"
+          href={storefrontRoutes.home}
+        >
+          Return home
+        </Link>
+        <Link
+          className="inline-flex min-h-11 items-center rounded-full border border-[#253426] px-6 text-sm font-semibold text-[#253426]"
+          href={storefrontRoutes.shop}
+        >
+          Browse products
+        </Link>
+      </div>
     </Container>
   );
 }

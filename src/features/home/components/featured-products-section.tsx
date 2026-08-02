@@ -4,6 +4,7 @@ import { ButtonLink } from "@/components/ui/button";
 import { Container } from "@/components/ui/container";
 import { ProductCard } from "@/features/products/components/product-card";
 import { getFeaturedProducts } from "@/lib/shopify";
+import { storefrontRoutes } from "@/config/navigation";
 
 export async function FeaturedProductsSection() {
   const featuredProducts = await getFeaturedProducts(5);
@@ -31,7 +32,7 @@ export async function FeaturedProductsSection() {
           </div>
 
           <ButtonLink
-            href="/shop"
+            href={storefrontRoutes.shop}
             variant="ghost"
             className="w-fit gap-2 px-0 hover:bg-transparent hover:text-brand"
           >
