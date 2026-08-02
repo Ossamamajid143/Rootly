@@ -1,18 +1,23 @@
 import type { Metadata } from "next";
 import { PageIntro } from "@/components/ui/page-intro";
+import { Container } from "@/components/ui/container";
+import { SearchResults } from "@/features/search/search-results";
+import { getProducts } from "@/lib/shopify";
 
 export const metadata: Metadata = {
   title: "Search",
 };
 
-export default function SearchPage() {
+export default async function SearchPage() {
+  const products = await getProducts();
   return (
     <main>
       <PageIntro
         eyebrow="Search"
         title="Find the right ROOTLY product."
-        description="Product search will be connected when we add the Shopify product catalogue."
+        description="Search the ROOTLY catalogue by product, ingredient or ritual."
       />
+      <Container className="py-12 sm:py-20"><SearchResults products={products} /></Container>
     </main>
   );
 }

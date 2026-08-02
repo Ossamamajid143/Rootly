@@ -1,10 +1,12 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PageIntro } from "@/components/ui/page-intro";
 import { Container } from "@/components/ui/container";
-import { formatMoney } from "@/lib/format-money";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
 import { getProductByHandle, getProducts } from "@/lib/shopify";
+import { ProductGallery } from "@/features/products/components/product-gallery";
+import { PurchasePanel } from "@/features/products/components/purchase-panel";
+import { ProductAccordions } from "@/features/products/components/product-accordions";
+import { ProductCard } from "@/features/products/components/product-card";
 
 interface ProductPageProps {
   params: Promise<{
@@ -48,48 +50,13 @@ export default async function ProductPage({
     notFound();
   }
 
-  return (
-    <main>
-      <PageIntro
-        eyebrow={product.productType}
-        title={product.title}
-        description={product.description}
-      />
+  const related = (await getProducts()).filter((item) => item.id !== product.id).slice(0, 4);
 
-      <Container className="grid gap-10 py-12 md:grid-cols-2 md:items-start lg:gap-16">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] border border-border bg-sand">
-          {product.featuredImage ? (
-            <Image
-              src={product.featuredImage.url}
-              alt={product.featuredImage.altText || product.title}
-              fill
-              priority
-              sizes="(max-width: 767px) 100vw, 50vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center px-6 text-center text-sm text-muted">
-              Product image unavailable
-            </div>
-          )}
-        </div>
-
-        <div className="pt-2 md:sticky md:top-28">
-          <p className="text-sm uppercase tracking-[0.16em] text-muted">
-            Starting from
-          </p>
-
-          <p className="mt-2 font-display text-4xl font-semibold text-forest">
-            {formatMoney(product.priceRange.minVariantPrice)}
-          </p>
-
-          <p className="mt-5 text-sm font-semibold text-foreground">
-            {product.availableForSale
-              ? "Available"
-              : "Currently unavailable"}
-          </p>
-        </div>
-      </Container>
-    </main>
-  );
+  return <main>
+    <Container className="grid gap-10 py-10 md:grid-cols-[1.05fr_0.95fr] md:items-start md:py-16 lg:gap-20">
+      <ScrollReveal direction="right"><ProductGallery title={product.title} images={product.images.length ? product.images : product.featuredImage ? [product.featuredImage] : []} /></ScrollReveal>
+      <ScrollReveal direction="left" className="md:sticky md:top-28"><PurchasePanel product={product} /><ProductAccordions description={product.description} /></ScrollReveal>
+    </Container>
+    {related.length > 0 && <section className="border-t border-border bg-surface py-20 sm:py-24"><Container><div className="flex items-end justify-between gap-6"><div><p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">Keep exploring</p><h2 className="mt-4 font-display text-5xl font-semibold text-forest">More from ROOTLY.</h2></div></div><div className="no-scrollbar mt-10 flex snap-x gap-5 overflow-x-auto pb-3">{related.map((item) => <div key={item.id} className="w-[82vw] max-w-md shrink-0 snap-start sm:w-[45vw] lg:w-[31vw]"><ProductCard product={item} /></div>)}</div></Container></section>}
+  </main>;
 }

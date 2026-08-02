@@ -6,10 +6,10 @@ import { ProductCard } from "@/features/products/components/product-card";
 import { getFeaturedProducts } from "@/lib/shopify";
 
 export async function FeaturedProductsSection() {
-  const featuredProducts = await getFeaturedProducts();
+  const featuredProducts = await getFeaturedProducts(5);
 
   return (
-    <section className="py-20 sm:py-24 lg:py-28">
+    <section className="bg-background py-20 sm:py-24 lg:py-28">
       <Container>
         <Reveal
           className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
@@ -21,7 +21,7 @@ export async function FeaturedProductsSection() {
             </p>
 
             <h2 className="mt-4 font-display text-5xl font-semibold leading-[0.95] text-forest sm:text-6xl">
-              Begin with nature’s essentials.
+              The ROOTLY collection, in full view.
             </h2>
 
             <p className="mt-5 max-w-xl text-base leading-7 text-muted">
@@ -46,7 +46,7 @@ export async function FeaturedProductsSection() {
         </Reveal>
 
         {featuredProducts.length > 0 ? (
-          <div className="mt-12 grid gap-x-6 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-12 grid gap-x-7 gap-y-16 md:grid-cols-2">
             {featuredProducts.map((product, index) => (
               <Reveal key={product.id} delay={index * 0.075} y={22}>
                 <ProductCard product={product} />

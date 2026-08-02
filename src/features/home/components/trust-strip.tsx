@@ -41,10 +41,14 @@ export function TrustStrip() {
   return (
     <section
       aria-label="Why choose ROOTLY"
-      className="border-b border-border bg-surface"
+      className="border-y border-border bg-surface py-20 sm:py-28"
     >
       <Container>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4">
+        <Reveal className="mb-10 max-w-3xl">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-brand">Why ROOTLY</p>
+          <h2 className="mt-4 text-balance font-display text-5xl font-semibold leading-[0.95] text-forest sm:text-6xl">Good routines start with clarity.</h2>
+        </Reveal>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {trustItems.map((item, index) => {
             const Icon = item.icon;
 
@@ -54,20 +58,13 @@ export function TrustStrip() {
                 delay={index * 0.06}
                 y={12}
                 className={[
-                  "py-7 sm:px-6 lg:py-9",
-                  index === 0 ? "sm:pl-0" : "",
-                  index !== trustItems.length - 1
-                    ? "lg:border-r lg:border-border"
-                    : "",
-                  index === trustItems.length - 1
-                    ? "lg:pr-0"
-                    : "",
+                  "h-full",
                 ]
                   .filter(Boolean)
                   .join(" ")}
               >
-                <article className="flex h-full gap-4">
-                  <div className="flex size-11 shrink-0 items-center justify-center rounded-full bg-sand text-brand">
+                <article className="group flex h-full min-h-64 flex-col rounded-[1.75rem] border border-border bg-background p-6 transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-soft)]">
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-[1.1rem] bg-sand text-brand transition-transform duration-300 group-hover:scale-105">
                     <Icon
                       size={20}
                       strokeWidth={1.6}
@@ -75,12 +72,12 @@ export function TrustStrip() {
                     />
                   </div>
 
-                  <div>
-                    <h2 className="font-sans text-sm font-bold text-foreground">
+                  <div className="mt-auto pt-10">
+                    <h3 className="font-display text-2xl font-semibold text-forest">
                       {item.title}
-                    </h2>
+                    </h3>
 
-                    <p className="mt-1 max-w-[240px] text-sm leading-6 text-muted">
+                    <p className="mt-2 text-sm leading-6 text-muted">
                       {item.description}
                     </p>
                   </div>

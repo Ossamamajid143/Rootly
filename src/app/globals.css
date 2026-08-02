@@ -14,6 +14,8 @@
   --forest: #2e4432;
   --sand: #e7dac5;
   --border: #ddd2bf;
+  --radius-card: 2rem;
+  --shadow-soft: 0 22px 70px rgba(46, 68, 50, 0.12);
 }
 
 @theme inline {
@@ -41,6 +43,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -49,6 +52,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-manrope), sans-serif;
+  overflow-x: clip;
 }
 
 h1,
@@ -63,6 +67,39 @@ input,
 textarea,
 select {
   font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+img {
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 3px;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.editorial-grid {
+  background-image:
+    linear-gradient(to right, rgba(46, 68, 50, 0.055) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(46, 68, 50, 0.045) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @layer base {
@@ -93,6 +130,15 @@ select {
 
   .rootly-category-ticker {
     animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

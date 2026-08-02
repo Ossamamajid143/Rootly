@@ -1,8 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { formatMoney } from "@/lib/format-money";
 import type { Product } from "@/types/product";
+import { ProductMediaFrame } from "@/features/products/components/product-media-frame";
+import { AddToCartButton } from "@/features/cart/components/add-to-cart-button";
 
 interface ProductCardProps {
   product: Product;
@@ -10,26 +11,24 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const price = formatMoney(product.priceRange.minVariantPrice);
+  const badge = product.tags.find((tag) => /best|new|featured/i.test(tag));
 
   return (
-    <article>
+    <article className="group/card flex h-full flex-col">
       <Link
         href={`/products/${product.handle}`}
-        className="group block transition-transform duration-300 hover:-translate-y-0.5 motion-reduce:transform-none"
+        className="group block focus-visible:outline-none"
       >
-        <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] border border-border bg-sand">
-          {product.featuredImage ? (
-            <Image
-              src={product.featuredImage.url}
-              alt={product.featuredImage.altText || product.title}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-muted">
-              Product image unavailable
-            </div>
+        <div className="relative transition-transform duration-300 group-hover/card:-translate-y-1 motion-reduce:transform-none">
+          <ProductMediaFrame
+            title={product.title}
+            images={product.images.length ? product.images : product.featuredImage ? [product.featuredImage] : []}
+          />
+
+          {badge && (
+            <span className="absolute left-4 top-4 rounded-full bg-forest px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+              {badge}
+            </span>
           )}
 
           {!product.availableForSale && (
@@ -61,11 +60,13 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.description}
           </p>
 
-          <p className="mt-4 font-semibold text-foreground">
-            {price}
-          </p>
         </div>
       </Link>
+
+      <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+        <p className="font-semibold text-foreground">{price}</p>
+        <AddToCartButton product={product} className="min-h-11 gap-1.5 px-5 text-xs" />
+      </div>
     </article>
   );
 }

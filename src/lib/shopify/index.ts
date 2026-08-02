@@ -19,6 +19,7 @@ import type {
 } from "@/lib/shopify/types";
 import type { Collection } from "@/types/collection";
 import type { Product } from "@/types/product";
+import { cartCreateMutation } from "@/lib/shopify/mutations/cart";
 
 const CATALOG_REVALIDATE_SECONDS = 300;
 
@@ -103,4 +104,27 @@ export async function getCollectionByHandle(
     ...data.collection,
     products: data.collection.products.nodes.map(mapShopifyProduct),
   };
+}
+
+export async function createShopifyCheckout(lines: Array<{ merchandiseId: string; quantity: number }>) {
+  if (!isShopifyConfigured()) {
+    throw new Error("Shopify checkout is not configured.");
+  }
+
+  const data = await shopifyFetch<{
+    cartCreate: {
+      cart: { id: string; totalQuantity: number; checkoutUrl: string } | null;
+      userErrors: Array<{ message: string }>;
+    };
+  }, { lines: Array<{ merchandiseId: string; quantity: number }> }>({
+    query: cartCreateMutation,
+    variables: { lines },
+    revalidate: 0,
+  });
+
+  if (data.cartCreate.userErrors.length || !data.cartCreate.cart) {
+    throw new Error(data.cartCreate.userErrors[0]?.message || "Unable to create Shopify checkout.");
+  }
+
+  return data.cartCreate.cart;
 }

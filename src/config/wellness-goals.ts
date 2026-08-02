@@ -6,20 +6,35 @@ export type WellnessGoal = {
 
 export const wellnessGoals: WellnessGoal[] = [
   {
-    handle: "daily-foundation",
-    title: "Daily foundation",
-    description: "Build a steady baseline with small, repeatable rituals.",
+    handle: "energy-stamina",
+    title: "Energy & stamina",
+    description: "Explore plant-based additions for steady everyday routines and active days.",
   },
   {
-    handle: "energy-focus",
-    title: "Energy & focus",
+    handle: "stress-calm",
+    title: "Stress & calm",
     description:
-      "Feel clear and capable through the natural rhythm of your day.",
+      "Build a quiet, repeatable ritual that helps you make space to unwind.",
   },
   {
-    handle: "rest-recovery",
-    title: "Rest & recovery",
-    description: "Create room for deeper rest and more intentional recovery.",
+    handle: "digestion",
+    title: "Digestion",
+    description: "Discover simple food-first routines designed to fit comfortably into your day.",
+  },
+  {
+    handle: "immunity",
+    title: "Immunity",
+    description: "Support a varied daily routine with nutrient-rich plant ingredients.",
+  },
+  {
+    handle: "hair-skin",
+    title: "Hair & skin support",
+    description: "Explore nutrition-minded rituals that complement everyday care from within.",
+  },
+  {
+    handle: "healthy-weight",
+    title: "Healthy weight support",
+    description: "Pair balanced habits with straightforward plant-based additions—without quick-fix promises.",
   },
 ];
 

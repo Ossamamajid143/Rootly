@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { Container } from "@/components/ui/container";
 import { footerNavigation } from "@/config/navigation";
@@ -6,11 +7,11 @@ import { siteConfig } from "@/config/site";
 
 export function Footer() {
   return (
-    <footer className="mt-auto bg-[#253426] py-12 text-[#f8f5ed]">
+    <footer className="mt-auto border-t border-white/10 bg-[#203024] py-12 text-[#f8f5ed] sm:py-16">
       <Container className="grid gap-10 sm:grid-cols-2 sm:items-end">
         <div>
-          <Link className="text-3xl font-semibold tracking-[-0.04em]" href="/">
-            {siteConfig.name}
+          <Link className="inline-block" href="/" aria-label="ROOTLY homepage">
+            <Image src="/images/brand/rootly-logo.svg" alt="ROOTLY" width={146} height={52} className="brightness-0 invert" />
           </Link>
           <p className="mt-3 max-w-md text-sm leading-6 text-[#f8f5ed]/70">
             {siteConfig.description}

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/container";
 import { PageIntro } from "@/components/ui/page-intro";
 import { Section } from "@/components/ui/section";
-import { ProductGrid } from "@/features/products/components/product-grid";
+import { ShopCatalog } from "@/features/shop/components/shop-catalog";
 import { getProducts } from "@/lib/shopify";
 
 export const metadata: Metadata = {
@@ -20,10 +20,10 @@ export default async function ShopPage() {
         title="Plant-powered products for everyday rituals."
         description="Explore thoughtfully selected herbs, functional powders and adaptogen blends."
       />
-      <Section>
+      <Section className="pt-12 sm:pt-16">
         <Container>
           {products.length > 0 ? (
-            <ProductGrid products={products} />
+            <ShopCatalog products={products} />
           ) : (
             <div className="border-y border-border py-12">
               <h2 className="font-display text-3xl font-semibold text-forest">

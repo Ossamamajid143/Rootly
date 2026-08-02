@@ -1,4 +1,6 @@
 import { Container } from "@/components/ui/container";
+import { OrganicDivider } from "@/components/ui/organic-divider";
+import { ScrollReveal } from "@/components/motion/scroll-reveal";
 
 interface PageIntroProps {
   eyebrow?: string;
@@ -12,9 +14,9 @@ export function PageIntro({
   description,
 }: PageIntroProps) {
   return (
-    <section className="border-b border-border py-20 sm:py-28">
-      <Container>
-        <div className="max-w-3xl">
+    <section className="editorial-grid relative border-b border-border bg-sand/40 pt-16 sm:pt-24">
+      <Container className="pb-16 sm:pb-24">
+        <ScrollReveal className="max-w-4xl">
           {eyebrow && (
             <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-brand sm:text-sm">
               {eyebrow}
@@ -28,8 +30,9 @@ export function PageIntro({
           <p className="mt-6 max-w-2xl text-base leading-7 text-muted sm:text-lg">
             {description}
           </p>
-        </div>
+        </ScrollReveal>
       </Container>
+      <OrganicDivider />
     </section>
   );
 }
