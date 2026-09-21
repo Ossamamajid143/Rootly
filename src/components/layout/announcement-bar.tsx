@@ -5,7 +5,7 @@ interface AnnouncementBarProps {
 }
 
 export function AnnouncementBar({
-  message = "Plant-powered wellness, delivered worldwide.",
+  message = "Plant-powered wellness",
 }: AnnouncementBarProps) {
   return (
     <div className="bg-forest text-background">

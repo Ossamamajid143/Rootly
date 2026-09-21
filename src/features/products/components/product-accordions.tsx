@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 const staticSections = [
-  { title: "Shipping & returns", content: "ROOTLY delivers worldwide. Contact the team for current delivery timing, order help, and return eligibility." },
+  { title: "Shipping & returns", content: "Contact the team for current delivery timing, order help, and return eligibility." },
 ];
 
 export function ProductAccordions({ description }: { description?: string }) {

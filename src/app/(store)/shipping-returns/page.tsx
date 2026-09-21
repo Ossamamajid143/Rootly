@@ -12,7 +12,7 @@ const sections = [
   {
     title: "Delivery and shipping charges",
     paragraphs: [
-      "ROOTLY ships worldwide. Available shipping options and any applicable charges are calculated and displayed during secure Shopify checkout before an order is completed.",
+      "Available shipping options and any applicable charges are calculated and displayed during secure Shopify checkout before an order is completed.",
       "A product appearing in the catalogue does not by itself confirm availability. Current availability is shown with the product and confirmed again through checkout.",
     ],
   },
