@@ -6,15 +6,20 @@ import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
-import { storefrontRoutes } from "@/config/navigation";
+import { productRoute, storefrontRoutes } from "@/config/navigation";
+import type { Product } from "@/types/product";
 
 const ingredients = [
-  { name: "Ashwagandha", image: "Ashwaganda.jpeg", eyebrow: "A focused single ingredient", copy: "ROOTLY’s Ashwagandha Powder keeps the format straightforward, making the ingredient easy to understand and simple to add to an established routine." },
-  { name: "Moringa", image: "Moringa.jpeg", eyebrow: "A nutrient-rich leaf powder", copy: "Moringa is presented as a versatile plant powder. Explore the product page for ROOTLY’s own ingredient, usage, and caution information." },
-  { name: "Beetroot blend", image: "Pulse.jpeg", eyebrow: "Plants working together", copy: "Pulse combines familiar plant ingredients in one measured blend, designed for a convenient and consistent everyday ritual." },
+  { name: "Ashwagandha", key: "ashwagandha", eyebrow: "A focused single ingredient", copy: "ROOTLY’s Ashwagandha Powder keeps the format straightforward, making the ingredient easy to understand and simple to add to an established routine." },
+  { name: "Moringa", key: "moringa", eyebrow: "A nutrient-rich leaf powder", copy: "Moringa is presented as a versatile plant powder. Explore the product page for ROOTLY’s own ingredient, usage, and caution information." },
+  { name: "Beetroot", key: "beet", eyebrow: "Plants working together", copy: "Pulse combines familiar plant ingredients in one measured blend, designed for a convenient and consistent everyday ritual." },
 ];
 
-export function IngredientCarousel() {
+interface IngredientCarouselProps {
+  products?: Product[];
+}
+
+export function IngredientCarousel({ products = [] }: IngredientCarouselProps) {
   const [active, setActive] = useState(0);
   const [direction, setDirection] = useState(1);
   const reduceMotion = useReducedMotion();
@@ -23,6 +28,17 @@ export function IngredientCarousel() {
     setActive((next + ingredients.length) % ingredients.length);
   };
   const item = ingredients[active];
+
+  const matchingProduct =
+    products.find(
+      (p) =>
+        p.title.toLowerCase().includes(item.key) ||
+        p.tags.some((t) => t.toLowerCase().includes(item.key)) ||
+        p.description.toLowerCase().includes(item.key),
+    ) || (products.length > 0 ? products[active % products.length] : null);
+
+  const productImg = matchingProduct?.featuredImage?.url;
+  const productAlt = matchingProduct?.featuredImage?.altText || matchingProduct?.title || item.name;
 
   return (
     <section className="overflow-hidden py-20 sm:py-28">
@@ -53,14 +69,40 @@ export function IngredientCarousel() {
               onDragEnd={(_, info) => { if (info.offset.x < -50) select(active + 1); if (info.offset.x > 50) select(active - 1); }}
               className="grid min-h-[520px] md:grid-cols-2"
             >
-              <div className="relative min-h-[360px] bg-sand md:min-h-0">
-                <Image src={`/images/products/${item.image}`} alt={`ROOTLY product featuring ${item.name}`} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-contain p-7 sm:p-12" />
+              <div className="relative flex min-h-[360px] items-center justify-center bg-sand md:min-h-0">
+                {productImg ? (
+                  <Image
+                    src={productImg}
+                    alt={productAlt}
+                    fill
+                    sizes="(max-width: 767px) 100vw, 50vw"
+                    className="object-contain p-7 sm:p-12"
+                  />
+                ) : (
+                  <div className="p-10 text-center font-display text-3xl font-semibold text-forest/40">
+                    {item.name}
+                  </div>
+                )}
               </div>
               <div className="flex flex-col justify-center p-7 sm:p-12 lg:p-16">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-brand">{item.eyebrow}</p>
                 <h3 className="mt-5 font-display text-5xl font-semibold text-forest sm:text-6xl">{item.name}</h3>
                 <p className="mt-6 max-w-lg text-base leading-8 text-muted">{item.copy}</p>
-                <Link href={storefrontRoutes.ingredients} className="mt-8 w-fit border-b border-brand pb-1 text-sm font-bold text-brand">Explore ingredients</Link>
+                {matchingProduct ? (
+                  <Link
+                    href={productRoute(matchingProduct.handle)}
+                    className="mt-8 w-fit border-b border-brand pb-1 text-sm font-bold text-brand hover:text-brand-dark"
+                  >
+                    View {matchingProduct.title}
+                  </Link>
+                ) : (
+                  <Link
+                    href={storefrontRoutes.ingredients}
+                    className="mt-8 w-fit border-b border-brand pb-1 text-sm font-bold text-brand hover:text-brand-dark"
+                  >
+                    Explore ingredients
+                  </Link>
+                )}
               </div>
             </motion.article>
           </AnimatePresence>

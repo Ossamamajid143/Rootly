@@ -8,13 +8,25 @@ import { ArrowUpRight } from "lucide-react";
 import { Container } from "@/components/ui/container";
 import { wellnessGoals } from "@/config/wellness-goals";
 import { wellnessGoalRoute } from "@/config/navigation";
+import type { Product } from "@/types/product";
 
-const images = ["Pulse.jpeg", "Ease.jpeg", "Balance.jpeg", "Moringa.jpeg", "Ashwaganda.jpeg", "Balance.jpeg"];
+interface WellnessShowcaseProps {
+  products?: Product[];
+}
 
-export function WellnessShowcase() {
+export function WellnessShowcase({ products = [] }: WellnessShowcaseProps) {
   const [active, setActive] = useState(0);
   const reduceMotion = useReducedMotion();
   const goal = wellnessGoals[active];
+
+  // Match a Shopify product by title/description or cycle through available Shopify products
+  const activeProduct =
+    products.find((p) =>
+      `${p.title} ${p.tags.join(" ")} ${p.description}`.toLowerCase().includes(goal.title.toLowerCase())
+    ) || (products.length > 0 ? products[active % products.length] : null);
+
+  const imageUrl = activeProduct?.featuredImage?.url;
+  const imageAlt = activeProduct?.featuredImage?.altText || activeProduct?.title || goal.title;
 
   return (
     <section className="overflow-hidden bg-[#ede4d5] py-20 sm:py-28">
@@ -38,11 +50,26 @@ export function WellnessShowcase() {
                 exit={{ opacity: 0 }}
                 transition={{ duration: reduceMotion ? 0.01 : 0.45 }}
               >
-                <Image src={`/images/products/${images[active]}`} alt="" fill sizes="55vw" className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest/82 via-transparent to-transparent" />
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt={imageAlt}
+                    fill
+                    sizes="55vw"
+                    className="object-contain p-12 sm:p-16"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-forest/80 via-forest/60 to-brand/40" />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-forest/85 via-forest/30 to-transparent" />
                 <div className="absolute inset-x-8 bottom-8 text-white">
                   <p className="max-w-xl font-display text-4xl font-semibold text-white">{goal.title}</p>
                   <p className="mt-2 max-w-xl text-sm leading-6 text-white/75">{goal.description}</p>
+                  {activeProduct && (
+                    <p className="mt-3 text-xs font-semibold tracking-wider uppercase text-sand">
+                      Featured: {activeProduct.title}
+                    </p>
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>
