@@ -7,7 +7,7 @@ export function formatMoney(money: Money) {
     return `${money.currencyCode} ${money.amount}`;
   }
 
-  return new Intl.NumberFormat("en-PK", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: money.currencyCode,
     maximumFractionDigits: 0,

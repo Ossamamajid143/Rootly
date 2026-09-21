@@ -12,6 +12,6 @@ export const storeConfig = {
 } as const;
 
 export const socialLinks = {
-  instagram: "https://www.instagram.com/rootly.pk/",
-  facebook: "https://www.facebook.com/rootly.pk/",
+  instagram: "https://www.instagram.com/rootly/",
+  facebook: "https://www.facebook.com/rootly/",
 } as const;
