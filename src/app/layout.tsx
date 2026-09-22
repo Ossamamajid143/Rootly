@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
-import { AnnouncementBar } from "@/components/layout/announcement-bar";
-import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
 import { MotionProvider } from "@/components/motion/motion-provider";
-import { PageTransition } from "@/components/motion/page-transition";
 import { CartProvider } from "@/features/cart/cart-provider";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
@@ -41,12 +37,7 @@ export default function RootLayout({
         className={`${manrope.variable} ${cormorant.variable} antialiased`}
       >
         <MotionProvider>
-          <CartProvider>
-            <AnnouncementBar />
-            <Header />
-            <PageTransition>{children}</PageTransition>
-            <Footer />
-          </CartProvider>
+          <CartProvider>{children}</CartProvider>
         </MotionProvider>
       </body>
     </html>

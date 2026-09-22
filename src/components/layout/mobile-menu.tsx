@@ -112,7 +112,21 @@ export function MobileMenu({ items }: MobileMenuProps) {
                 </button>
               </div>
 
-              <nav className="mt-10" aria-label="Mobile navigation">
+              <div className="mt-6">
+                <Link
+                  href={storefrontRoutes.findYourFormula}
+                  onClick={() => setIsOpen(false)}
+                  className="flex items-center justify-between rounded-2xl bg-brand px-5 py-4 text-white shadow-md transition-transform hover:scale-[1.01]"
+                >
+                  <div>
+                    <span className="block text-xs uppercase tracking-wider text-brand-light font-bold">Personalized Routine</span>
+                    <span className="font-display text-xl font-semibold">Find Your Formula</span>
+                  </div>
+                  <ArrowUpRight size={20} strokeWidth={2} />
+                </Link>
+              </div>
+
+              <nav className="mt-6" aria-label="Mobile navigation">
                 <ul className="space-y-2">
                   {items.map((item, index) => {
                     const isActive = isPrimaryNavigationItemActive(

@@ -111,11 +111,11 @@ export function AnimatedHeroCopy() {
         }}
       >
         <ButtonLink
-          href={storefrontRoutes.shop}
+          href={storefrontRoutes.findYourFormula}
           size="md"
-          className="group min-h-11 w-full gap-2 px-5 text-sm sm:w-auto"
+          className="group min-h-12 w-full gap-2 px-6 text-sm sm:w-auto bg-brand text-white hover:bg-brand-dark shadow-md"
         >
-          Shop now
+          Find Your Formula
           <ArrowRight
             size={16}
             strokeWidth={1.8}
@@ -125,12 +125,12 @@ export function AnimatedHeroCopy() {
         </ButtonLink>
 
         <ButtonLink
-          href={storefrontRoutes.wellnessGoals}
+          href={storefrontRoutes.shop}
           variant="secondary"
           size="md"
-          className="min-h-11 px-5 text-sm max-sm:!hidden sm:w-auto"
+          className="min-h-12 px-5 text-sm sm:w-auto"
         >
-          Explore wellness goals
+          Shop all blends
         </ButtonLink>
       </motion.div>
 

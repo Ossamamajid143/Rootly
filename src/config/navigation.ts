@@ -13,6 +13,7 @@ export const storefrontRoutes = {
   search: "/search",
   account: "/account",
   cart: "/cart",
+  findYourFormula: "/find-your-formula",
   shippingReturns: "/shipping-returns",
   privacy: "/privacy",
   terms: "/terms",

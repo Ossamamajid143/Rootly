@@ -107,7 +107,14 @@ export function Header({ cartCount = 0 }: HeaderProps) {
           </ul>
         </nav>
 
-        <div className="flex items-center justify-self-end">
+        <div className="flex items-center gap-2 sm:gap-3 justify-self-end">
+          <Link
+            href={storefrontRoutes.findYourFormula}
+            className="inline-flex h-9 sm:h-10 items-center justify-center rounded-full bg-brand px-4 text-xs sm:text-sm font-bold text-white shadow-sm transition-[background-color,transform] duration-200 hover:bg-brand-dark hover:scale-[1.02] active:scale-[0.98]"
+          >
+            Find Your Formula
+          </Link>
+
           <Link
             href={storefrontRoutes.search}
             aria-label="Search"
