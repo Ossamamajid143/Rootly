@@ -93,13 +93,6 @@ export function MandatoryQuizModal() {
         className="relative w-full max-w-2xl bg-[#fffdf8] rounded-2xl shadow-2xl border border-[#ddd2bf] overflow-hidden my-auto flex flex-col max-h-[94vh] animate-fadeIn"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Top Mandatory Eyebrow Badge */}
-        <div className="bg-[#25241f] text-white text-[10px] sm:text-xs font-semibold py-1.5 px-4 text-center tracking-widest uppercase flex items-center justify-center gap-2">
-          <span>🔒 Mandatory Consultation</span>
-          <span className="opacity-60">·</span>
-          <span className="hidden sm:inline">Complete to personalize routine &amp; unlock store</span>
-          <span className="sm:hidden">Find your formula to enter</span>
-        </div>
 
         {/* Modal Quiz Content */}
         <div className="flex-1 overflow-y-auto">

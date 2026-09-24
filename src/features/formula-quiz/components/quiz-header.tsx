@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
 
@@ -47,8 +48,15 @@ export function QuizHeader({
 
         {/* Brand Logo - In modal mode while incomplete, disable navigation to prevent bypassing */}
         {isModal && !isCompleted ? (
-          <span className="font-serif text-2xl sm:text-3xl tracking-wide text-[#25241f] font-semibold select-none">
-            Rootly
+          <span className="select-none" aria-label="Rootly">
+            <Image
+              src="/images/brand/rootly-logo.svg"
+              alt="Rootly"
+              width={110}
+              height={36}
+              priority
+              className="h-8 w-auto object-contain"
+            />
           </span>
         ) : (
           <Link
@@ -59,9 +67,17 @@ export function QuizHeader({
                 onContinueToStore();
               }
             }}
-            className="font-serif text-2xl sm:text-3xl tracking-wide text-[#25241f] font-semibold hover:opacity-90 transition-opacity"
+            className="hover:opacity-80 transition-opacity"
+            aria-label="Rootly — home"
           >
-            Rootly
+            <Image
+              src="/images/brand/rootly-logo.svg"
+              alt="Rootly"
+              width={110}
+              height={36}
+              priority
+              className="h-8 w-auto object-contain"
+            />
           </Link>
         )}
 
