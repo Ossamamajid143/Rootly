@@ -20,6 +20,12 @@ import type {
 import type { Collection } from "@/types/collection";
 import type { Product } from "@/types/product";
 import { cartCreateMutation } from "@/lib/shopify/mutations/cart";
+import {
+  customerCreateMutation,
+  customerAccessTokenCreateMutation,
+  customerAccessTokenDeleteMutation,
+} from "@/lib/shopify/mutations/customer";
+import { customerQuery } from "@/lib/shopify/queries/customer";
 
 const CATALOG_REVALIDATE_SECONDS = 300;
 
@@ -106,19 +112,27 @@ export async function getCollectionByHandle(
   };
 }
 
-export async function createShopifyCheckout(lines: Array<{ merchandiseId: string; quantity: number }>) {
+export async function createShopifyCheckout(
+  lines: Array<{ merchandiseId: string; quantity: number }>,
+  buyerIdentity?: { customerAccessToken?: string; email?: string }
+) {
   if (!isShopifyConfigured()) {
     throw new Error("Shopify checkout is not configured.");
   }
+
+  const identity = buyerIdentity?.customerAccessToken || buyerIdentity?.email ? buyerIdentity : undefined;
 
   const data = await shopifyFetch<{
     cartCreate: {
       cart: { id: string; totalQuantity: number; checkoutUrl: string } | null;
       userErrors: Array<{ message: string }>;
     };
-  }, { lines: Array<{ merchandiseId: string; quantity: number }> }>({
+  }, {
+    lines: Array<{ merchandiseId: string; quantity: number }>;
+    buyerIdentity?: { customerAccessToken?: string; email?: string };
+  }>({
     query: cartCreateMutation,
-    variables: { lines },
+    variables: { lines, buyerIdentity: identity },
     revalidate: 0,
   });
 
@@ -127,4 +141,173 @@ export async function createShopifyCheckout(lines: Array<{ merchandiseId: string
   }
 
   return data.cartCreate.cart;
+}
+
+export interface CustomerAuthResult {
+  customer?: {
+    id: string;
+    email: string;
+    firstName?: string;
+    lastName?: string;
+    displayName?: string;
+    acceptsMarketing?: boolean;
+  };
+  accessToken?: string;
+  expiresAt?: string;
+  error?: string;
+}
+
+export async function createCustomerAccount(input: {
+  email: string;
+  password: string;
+  firstName?: string;
+  lastName?: string;
+  acceptsMarketing?: boolean;
+}): Promise<CustomerAuthResult> {
+  if (!isShopifyConfigured()) {
+    throw new Error("Shopify is not configured.");
+  }
+
+  // 1. Create Customer
+  const createData = await shopifyFetch<{
+    customerCreate: {
+      customer: {
+        id: string;
+        email: string;
+        firstName?: string;
+        lastName?: string;
+        displayName?: string;
+        acceptsMarketing?: boolean;
+      } | null;
+      customerUserErrors: Array<{ code: string; field: string[]; message: string }>;
+    };
+  }, { input: typeof input }>({
+    query: customerCreateMutation,
+    variables: { input },
+    revalidate: 0,
+  });
+
+  if (createData.customerCreate.customerUserErrors.length) {
+    return {
+      error: createData.customerCreate.customerUserErrors[0].message,
+    };
+  }
+
+  // 2. Generate Access Token immediately
+  const tokenResult = await loginCustomer(input.email, input.password);
+  return {
+    customer: createData.customerCreate.customer || undefined,
+    accessToken: tokenResult.accessToken,
+    expiresAt: tokenResult.expiresAt,
+    error: tokenResult.error,
+  };
+}
+
+export async function loginCustomer(
+  email: string,
+  password: string
+): Promise<CustomerAuthResult> {
+  if (!isShopifyConfigured()) {
+    throw new Error("Shopify is not configured.");
+  }
+
+  const tokenData = await shopifyFetch<{
+    customerAccessTokenCreate: {
+      customerAccessToken: {
+        accessToken: string;
+        expiresAt: string;
+      } | null;
+      customerUserErrors: Array<{ code: string; field: string[]; message: string }>;
+    };
+  }, { input: { email: string; password: string } }>({
+    query: customerAccessTokenCreateMutation,
+    variables: { input: { email, password } },
+    revalidate: 0,
+  });
+
+  if (tokenData.customerAccessTokenCreate.customerUserErrors.length) {
+    return {
+      error: tokenData.customerAccessTokenCreate.customerUserErrors[0].message,
+    };
+  }
+
+  const token = tokenData.customerAccessTokenCreate.customerAccessToken;
+  if (!token) {
+    return { error: "Failed to generate customer token." };
+  }
+
+  // Fetch customer details with this token
+  const customerDetails = await getCustomerDetails(token.accessToken);
+
+  return {
+    customer: customerDetails.customer || undefined,
+    accessToken: token.accessToken,
+    expiresAt: token.expiresAt,
+  };
+}
+
+export async function getCustomerDetails(customerAccessToken: string) {
+  if (!isShopifyConfigured()) {
+    return { customer: null };
+  }
+
+  try {
+    const data = await shopifyFetch<{
+      customer: {
+        id: string;
+        firstName?: string;
+        lastName?: string;
+        displayName?: string;
+        email: string;
+        phone?: string;
+        acceptsMarketing?: boolean;
+        orders?: {
+          edges: Array<{
+            node: {
+              id: string;
+              name: string;
+              orderNumber: number;
+              processedAt: string;
+              financialStatus: string;
+              fulfillmentStatus: string;
+              totalPrice: {
+                amount: string;
+                currencyCode: string;
+              };
+              lineItems: {
+                edges: Array<{
+                  node: {
+                    title: string;
+                    quantity: number;
+                  };
+                }>;
+              };
+            };
+          }>;
+        };
+      } | null;
+    }, { customerAccessToken: string }>({
+      query: customerQuery,
+      variables: { customerAccessToken },
+      revalidate: 0,
+    });
+
+    return { customer: data.customer };
+  } catch (error) {
+    console.error("Failed to query customer details:", error);
+    return { customer: null };
+  }
+}
+
+export async function logoutCustomer(customerAccessToken: string) {
+  if (!isShopifyConfigured()) return;
+  try {
+    await shopifyFetch({
+      query: customerAccessTokenDeleteMutation,
+      variables: { customerAccessToken },
+      revalidate: 0,
+    });
+  } catch (error) {
+    console.error("Failed to delete customer access token:", error);
+  }
 }

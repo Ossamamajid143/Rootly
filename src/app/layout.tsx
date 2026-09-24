@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 import { MotionProvider } from "@/components/motion/motion-provider";
 import { CartProvider } from "@/features/cart/cart-provider";
+import { AuthProvider } from "@/features/auth/auth-provider";
+import { MandatoryQuizModal } from "@/features/formula-quiz/components/mandatory-quiz-modal";
 import { siteConfig } from "@/config/site";
 import "./globals.css";
 
@@ -14,7 +16,7 @@ const manrope = Manrope({
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: "variable",
   display: "swap",
 });
 
@@ -37,7 +39,12 @@ export default function RootLayout({
         className={`${manrope.variable} ${cormorant.variable} antialiased`}
       >
         <MotionProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <AuthProvider>
+              <MandatoryQuizModal />
+              {children}
+            </AuthProvider>
+          </CartProvider>
         </MotionProvider>
       </body>
     </html>

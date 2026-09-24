@@ -21,6 +21,7 @@ interface FormulaRecommendationPageProps {
   formula: CustomFormulaProfile;
   answers: UserQuizAnswers;
   onRetakeQuiz: () => void;
+  onContinueToStore?: () => void;
 }
 
 type SupplyTier = "oneMonth" | "twoMonth" | "threeMonth";
@@ -29,6 +30,7 @@ export function FormulaRecommendationPage({
   formula,
   answers,
   onRetakeQuiz,
+  onContinueToStore,
 }: FormulaRecommendationPageProps) {
   const cart = useCart();
   const [selectedTier, setSelectedTier] = useState<SupplyTier>("threeMonth");
@@ -98,8 +100,17 @@ export function FormulaRecommendationPage({
   return (
     <div className="w-full bg-[#fffdf8] pb-24 text-[#25241f]">
       {/* Top Banner Notice */}
-      <div className="bg-[#25241f] text-white text-xs font-semibold py-2 px-4 text-center tracking-widest uppercase">
-        Personalized Formulation Complete · Special Welcome Discount Applied
+      <div className="bg-[#25241f] text-white text-xs font-semibold py-2 px-4 text-center tracking-widest uppercase flex items-center justify-center gap-4">
+        <span>Personalized Formulation Complete · Special Welcome Discount Applied</span>
+        {onContinueToStore && (
+          <button
+            type="button"
+            onClick={onContinueToStore}
+            className="hidden md:inline-flex items-center gap-1 text-[11px] underline font-bold tracking-normal uppercase hover:text-[#fbf377] transition-colors cursor-pointer"
+          >
+            <span>Continue to Store &rarr;</span>
+          </button>
+        )}
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
@@ -505,6 +516,19 @@ export function FormulaRecommendationPage({
                   One time purchase, ${formula.pricing.oneTimePrice}
                 </button>
               </div>
+
+              {onContinueToStore && (
+                <div className="mt-4 pt-4 border-t border-[#ddd2bf]/70">
+                  <button
+                    type="button"
+                    onClick={onContinueToStore}
+                    className="w-full min-h-[50px] rounded-md border-2 border-[#25241f] bg-[#f8f4eb]/70 hover:bg-[#25241f] hover:text-white text-[#25241f] font-semibold text-sm sm:text-base transition-all duration-150 flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
+                  >
+                    <span>Continue to Website & Browse Store</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
 
             {/* Reassurance Icons */}
@@ -711,15 +735,26 @@ export function FormulaRecommendationPage({
 
           </div>
 
-          {/* Bottom Retake Button */}
-          <div className="mt-14 text-center">
+          {/* Bottom Retake & Continue Buttons */}
+          <div className="mt-14 flex flex-col sm:flex-row items-center justify-center gap-4">
             <button
               type="button"
               onClick={onRetakeQuiz}
-              className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-[#6f6b60] hover:text-[#25241f] transition-colors py-2 px-4 rounded-full border border-[#ddd2bf] hover:bg-[#f8f4eb]"
+              className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-[#6f6b60] hover:text-[#25241f] transition-colors py-2.5 px-5 rounded-full border border-[#ddd2bf] hover:bg-[#f8f4eb] cursor-pointer"
             >
               <RotateCcw className="w-3.5 h-3.5" /> Retake Diagnostic Quiz
             </button>
+
+            {onContinueToStore && (
+              <button
+                type="button"
+                onClick={onContinueToStore}
+                className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-bold text-white bg-[#25241f] hover:bg-[#3d3a33] transition-colors py-2.5 px-6 rounded-full shadow-sm cursor-pointer"
+              >
+                <span>Continue to Website</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </section>
 

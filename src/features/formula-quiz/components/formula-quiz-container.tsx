@@ -14,10 +14,20 @@ import { FormulationLoader } from "./steps/formulation-loader";
 import { FormulaRecommendationPage } from "./results/formula-recommendation-page";
 import { ArrowRight } from "lucide-react";
 
-export function FormulaQuizContainer() {
+interface FormulaQuizContainerProps {
+  isModal?: boolean;
+  onCompleteAndContinue?: () => void;
+}
+
+export function FormulaQuizContainer({
+  isModal = false,
+  onCompleteAndContinue,
+}: FormulaQuizContainerProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [answers, setAnswers] = useState<UserQuizAnswers>({});
   const [textInputValue, setTextInputValue] = useState("");
+  const [marketingConsent, setMarketingConsent] = useState(false);
+  const [emailError, setEmailError] = useState("");
   const [isCompleted, setIsCompleted] = useState(false);
 
   const currentStep = QUIZ_STEPS[stepIndex];
@@ -26,6 +36,7 @@ export function FormulaQuizContainer() {
     if (stepIndex < QUIZ_STEPS.length - 1) {
       setStepIndex((prev) => prev + 1);
       setTextInputValue("");
+      setEmailError("");
     } else {
       setIsCompleted(true);
     }
@@ -35,6 +46,7 @@ export function FormulaQuizContainer() {
     if (stepIndex > 0) {
       setStepIndex((prev) => prev - 1);
       setTextInputValue("");
+      setEmailError("");
     }
   };
 
@@ -62,23 +74,74 @@ export function FormulaQuizContainer() {
     });
   };
 
+  const submitLeadToBackend = async (
+    userAnswers: UserQuizAnswers,
+    formula: ReturnType<typeof selectFormulaForUser>
+  ) => {
+    try {
+      await fetch("/api/quiz-results", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userAnswers.email,
+          name: userAnswers.name,
+          marketingConsent: Boolean(userAnswers.marketingConsent),
+          answers: userAnswers,
+          formula: {
+            id: formula.id,
+            slug: formula.slug,
+            title: formula.title,
+            matchPercentage: formula.matchPercentage,
+          },
+        }),
+      });
+    } catch (err) {
+      console.error("[Quiz Lead Submission] Failed to submit lead to backend:", err);
+    }
+  };
+
   const handleTextInputSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!textInputValue.trim()) return;
+    setEmailError("");
+    const trimmed = textInputValue.trim();
 
     if (currentStep.id === "name") {
-      setAnswers((prev) => ({ ...prev, name: textInputValue.trim() }));
+      if (!trimmed) return;
+      setAnswers((prev) => ({ ...prev, name: trimmed }));
+      handleNext();
     } else if (currentStep.id === "email") {
-      setAnswers((prev) => ({ ...prev, email: textInputValue.trim() }));
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!trimmed || !emailRegex.test(trimmed)) {
+        setEmailError("Please enter a valid email address to receive your results.");
+        return;
+      }
+
+      const updatedAnswers: UserQuizAnswers = {
+        ...answers,
+        email: trimmed,
+        marketingConsent,
+      };
+      setAnswers(updatedAnswers);
+
+      // Submit lead to backend and Shopify customer API with explicit marketing consent
+      const formula = selectFormulaForUser(updatedAnswers.goals || []);
+      void submitLeadToBackend(updatedAnswers, formula);
+
+      handleNext();
     }
-    handleNext();
   };
 
   const selectedFormula = selectFormulaForUser(answers.goals || []);
 
-  // When analyzing loader completes, show recommendation page
+  // When analyzing loader completes, show recommendation page and record completion
   const handleAnalyzingComplete = () => {
     setIsCompleted(true);
+    try {
+      localStorage.setItem("rootly_quiz_completed", "true");
+      document.cookie = "rootly_quiz_completed=true; path=/; max-age=31536000; SameSite=Lax";
+    } catch (e) {
+      console.error("Failed to save quiz completion state:", e);
+    }
   };
 
   const handleRetake = () => {
@@ -86,24 +149,28 @@ export function FormulaQuizContainer() {
     setStepIndex(0);
     setAnswers({});
     setTextInputValue("");
+    setEmailError("");
   };
 
   return (
-    <div className="min-h-screen bg-[#fffdf8] flex flex-col font-sans selection:bg-[#e7dac5]">
+    <div className={`${isModal ? "flex-1 flex flex-col w-full" : "min-h-screen"} bg-[#fffdf8] flex flex-col font-sans selection:bg-[#e7dac5]`}>
       {/* Distraction-Free Header */}
       <QuizHeader
         progress={currentStep.progressPercentage}
         onBack={handleBack}
         canGoBack={stepIndex > 0 && !isCompleted}
         isCompleted={isCompleted}
+        isModal={isModal}
+        onContinueToStore={onCompleteAndContinue}
       />
 
-      <main className="flex-1 flex flex-col justify-center pt-20 pb-16 sm:pt-24 sm:pb-20 px-4 sm:px-6">
+      <main className={`flex-1 flex flex-col justify-center ${isModal ? "py-6 sm:py-8 px-4 sm:px-8" : "pt-20 pb-16 sm:pt-24 sm:pb-20 px-4 sm:px-6"}`}>
         {isCompleted ? (
           <FormulaRecommendationPage
             formula={selectedFormula}
             answers={answers}
             onRetakeQuiz={handleRetake}
+            onContinueToStore={onCompleteAndContinue}
           />
         ) : (
           <div className="w-full max-w-xl mx-auto">
@@ -190,7 +257,7 @@ export function FormulaQuizContainer() {
                         type="button"
                         onClick={handleNext}
                         disabled={(answers.goals?.length || 0) === 0}
-                        className="w-full min-h-[52px] sm:min-h-[56px] rounded-md bg-[#25241f] hover:bg-[#3d3a33] disabled:opacity-50 text-white font-medium text-base transition-colors duration-150 shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
+                        className="w-full min-h-[52px] sm:min-h-[56px] rounded-md bg-[#25241f] hover:bg-[#3d3a33] disabled:opacity-50 text-white font-medium text-base transition-colors duration-150 shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <span>Next</span>
                         <ArrowRight className="w-4 h-4" />
@@ -224,27 +291,58 @@ export function FormulaQuizContainer() {
                         {currentStep.inputLabel && (
                           <label className="block text-xs font-bold uppercase tracking-wider text-[#6f6b60] mb-2">
                             {currentStep.inputLabel}
+                            {currentStep.type === "email-collection" && (
+                              <span className="text-red-600 ml-1" title="Required">*</span>
+                            )}
                           </label>
                         )}
                         <input
                           type={currentStep.type === "email-collection" ? "email" : "text"}
                           value={textInputValue}
-                          onChange={(e) => setTextInputValue(e.target.value)}
+                          onChange={(e) => {
+                            setTextInputValue(e.target.value);
+                            if (emailError) setEmailError("");
+                          }}
                           placeholder={currentStep.inputPlaceholder}
                           autoFocus
                           required
-                          className="w-full min-h-[56px] px-4 rounded-md border border-[#25241f]/70 bg-white text-base text-[#25241f] placeholder:text-[#8c887e] focus:outline-none focus:ring-2 focus:ring-[#755525] focus:border-transparent transition-all"
+                          aria-required="true"
+                          className={`w-full min-h-[56px] px-4 rounded-md border ${
+                            emailError
+                              ? "border-red-500 focus:ring-red-500"
+                              : "border-[#25241f]/70 focus:ring-[#755525]"
+                          } bg-white text-base text-[#25241f] placeholder:text-[#8c887e] focus:outline-none focus:ring-2 focus:border-transparent transition-all`}
                         />
-                        {currentStep.inputSubtext && (
+                        {emailError ? (
+                          <p className="text-xs text-red-600 mt-2 font-medium">{emailError}</p>
+                        ) : currentStep.inputSubtext ? (
                           <p className="text-xs text-[#8c887e] mt-2">
                             {currentStep.inputSubtext}
                           </p>
-                        )}
+                        ) : null}
                       </div>
+
+                      {/* Required Email Collection Step: Unchecked marketing consent checkbox */}
+                      {currentStep.type === "email-collection" && (
+                        <div className="pt-1 pb-1">
+                          <label className="flex items-start gap-3 cursor-pointer select-none group">
+                            <input
+                              type="checkbox"
+                              id="marketing-consent-checkbox"
+                              checked={marketingConsent}
+                              onChange={(e) => setMarketingConsent(e.target.checked)}
+                              className="mt-0.5 h-4 w-4 rounded border-[#25241f]/40 text-[#755525] focus:ring-[#755525] accent-[#755525] cursor-pointer shrink-0"
+                            />
+                            <span className="text-xs text-[#6f6b60] group-hover:text-[#25241f] transition-colors leading-relaxed">
+                              I agree to receive promotional emails, botanical research insights, and exclusive discounts from Rootly. (Optional)
+                            </span>
+                          </label>
+                        </div>
+                      )}
 
                       <button
                         type="submit"
-                        className="w-full min-h-[52px] sm:min-h-[56px] rounded-md bg-[#25241f] hover:bg-[#3d3a33] text-white font-medium text-base transition-colors duration-150 shadow-md active:scale-[0.99] flex items-center justify-center gap-2"
+                        className="w-full min-h-[52px] sm:min-h-[56px] rounded-md bg-[#25241f] hover:bg-[#3d3a33] text-white font-medium text-base transition-colors duration-150 shadow-md active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                       >
                         <span>Continue</span>
                         <ArrowRight className="w-4 h-4" />

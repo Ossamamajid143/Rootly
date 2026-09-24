@@ -18,6 +18,7 @@ import {
   storefrontRoutes,
 } from "@/config/navigation";
 import { useCart } from "@/features/cart/cart-provider";
+import { useAuth } from "@/features/auth/auth-provider";
 
 interface HeaderProps {
   cartCount?: number;
@@ -25,6 +26,7 @@ interface HeaderProps {
 
 export function Header({ cartCount = 0 }: HeaderProps) {
   const cart = useCart();
+  const { user, openAuthModal, logout } = useAuth();
   const visibleCartCount = cart.totalQuantity || cartCount;
   const pathname = usePathname();
   const reduceMotion = useReducedMotion();
@@ -126,16 +128,36 @@ export function Header({ cartCount = 0 }: HeaderProps) {
             <Search size={20} strokeWidth={1.6} aria-hidden="true" />
           </Link>
 
-          <Link
-            href={storefrontRoutes.account}
-            aria-label="Account"
-            aria-current={
-              pathname === storefrontRoutes.account ? "page" : undefined
-            }
-            className="hidden size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:inline-flex"
-          >
-            <UserRound size={20} strokeWidth={1.6} aria-hidden="true" />
-          </Link>
+          {/* Account Button — shows auth modal if not signed in, links to account if signed in */}
+          {user ? (
+            <div className="hidden lg:flex items-center gap-1">
+              <Link
+                href={storefrontRoutes.account}
+                aria-label={`Account — ${user.displayName || user.email}`}
+                className="relative hidden size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:inline-flex"
+              >
+                <UserRound size={20} strokeWidth={1.6} aria-hidden="true" />
+                {/* Green dot indicating logged in */}
+                <span className="absolute right-1.5 top-1.5 h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background" aria-hidden="true" />
+              </Link>
+              <button
+                type="button"
+                onClick={() => void logout()}
+                className="hidden lg:inline-flex h-8 items-center px-3 text-[11px] font-bold uppercase tracking-wider text-[#6f6b60] hover:text-[#25241f] rounded-full hover:bg-sand transition-colors cursor-pointer"
+              >
+                Sign out
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              aria-label="Sign in or create account"
+              onClick={() => openAuthModal(undefined, "signin")}
+              className="hidden size-11 items-center justify-center rounded-full transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:bg-sand hover:text-brand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand lg:inline-flex cursor-pointer"
+            >
+              <UserRound size={20} strokeWidth={1.6} aria-hidden="true" />
+            </button>
+          )}
 
           <Link
             href={storefrontRoutes.cart}

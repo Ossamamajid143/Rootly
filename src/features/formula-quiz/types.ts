@@ -58,6 +58,7 @@ export interface UserQuizAnswers {
   brainFog?: string;
   name?: string;
   email?: string;
+  marketingConsent?: boolean;
   withCaffeine?: boolean;
 }
 

@@ -3,14 +3,17 @@ import { createShopifyCheckout } from "@/lib/shopify";
 
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as { lines?: Array<{ merchandiseId?: string; quantity?: number }> };
+    const body = (await request.json()) as {
+      lines?: Array<{ merchandiseId?: string; quantity?: number }>;
+      buyerIdentity?: { customerAccessToken?: string; email?: string };
+    };
     const lines = (body.lines ?? []).slice(0, 50).flatMap((line) =>
       typeof line.merchandiseId === "string" && Number.isInteger(line.quantity) && Number(line.quantity) > 0
         ? [{ merchandiseId: line.merchandiseId, quantity: Math.min(99, Number(line.quantity)) }]
         : []);
 
     if (!lines.length) return NextResponse.json({ error: "Your bag is empty." }, { status: 400 });
-    const cart = await createShopifyCheckout(lines);
+    const cart = await createShopifyCheckout(lines, body.buyerIdentity);
     return NextResponse.json({ checkoutUrl: cart.checkoutUrl });
   } catch (error) {
     return NextResponse.json(

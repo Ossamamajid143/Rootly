@@ -1,0 +1,40 @@
+[
+  {
+    "id": "lead_1790277704951_7e27ad26",
+    "email": "pshows525@gmail.com",
+    "name": "osama",
+    "marketingConsent": false,
+    "shopify": {
+      "status": "created",
+      "customerId": "gid://shopify/Customer/10512502718746",
+      "message": null
+    },
+    "formula": {
+      "id": "formula-calm",
+      "slug": "calm",
+      "title": "Calm & Stress Resilience Blend",
+      "matchPercentage": 97
+    },
+    "answers": {
+      "age": "18-25",
+      "sex": "male",
+      "goals": [
+        "energy",
+        "focus",
+        "motivation",
+        "memory",
+        "mood",
+        "stress"
+      ],
+      "energyDip": "morning",
+      "caffeineIntake": "1-cup",
+      "sleepQuality": "racing-mind",
+      "brainFog": "rarely",
+      "name": "osama",
+      "email": "pshows525@gmail.com",
+      "marketingConsent": false
+    },
+    "submittedAt": "2026-09-24T19:21:44.952Z",
+    "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36"
+  }
+]
